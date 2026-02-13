@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Will You Be My Valentine? 💕</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        height: 100vh; /* exact viewport height */
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden; /* 🔥 NO SCROLLING on body at all */
+        position: relative;
+        transition: background 0.5s ease;
+      }
+
+      /* Floating hearts animation */
+      .heart {
+        position: absolute;
+        font-size: 20px;
+        color: rgba(255, 255, 255, 0.7);
+        animation: float 15s infinite;
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      /* LOVE Display */
+      .love-display {
+        font-size: 80px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+        margin-bottom: 40px;
+        animation: pulse 2s ease-in-out infinite;
+        letter-spacing: 10px;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.1);
+        }
+      }
+
+      /* Question Container */
+      .question-container {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 50px 60px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        z-index: 10;
+      }
+
+      .question {
+        font-size: 36px;
+        color: #764ba2;
+        margin-bottom: 40px;
+        font-weight: bold;
+      }
+
+      .buttons-container {
+        display: flex;
+        gap: 30px;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .btn {
+        padding: 18px 50px;
+        font-size: 24px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+      }
+
+      .btn-yes {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-yes:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+      }
+
+      .btn-no {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        transition: none;
+      }
+
+      /* Surprise carousel (multiple pages) */
+      .surprise-page {
+        display: none;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 40px 40px 50px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 650px;
+        width: 90%;
+        z-index: 20;
+        backdrop-filter: blur(10px);
+        margin: 20px;
+        max-height: calc(100vh - 60px); /* prevent surprise from overflowing */
+        overflow-y: auto; /* only surprise itself can scroll if needed */
+      }
+
+      .surprise-page.show {
+        display: block;
+        animation: fadeSlide 0.5s ease forwards;
+      }
+
+      @keyframes fadeSlide {
+        0% {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .memory-header {
+        font-size: 42px;
+        color: #764ba2;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .memory-photo {
+        width: 100%;
+        max-height: 300px;
+        object-fit: cover;
+        border-radius: 25px;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        margin: 20px 0;
+        border: 5px solid white;
+        transition: transform 0.3s;
+      }
+
+      .memory-photo:hover {
+        transform: scale(1.02);
+      }
+
+      .memory-caption {
+        font-size: 22px;
+        color: #667eea;
+        margin-bottom: 30px;
+        font-style: italic;
+        background: rgba(255, 255, 255, 0.6);
+        padding: 10px 20px;
+        border-radius: 40px;
+        display: inline-block;
+      }
+
+      .nav-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+      }
+
+      .nav-btn {
+        padding: 15px 40px;
+        font-size: 22px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        transition: 0.2s;
+      }
+
+      .nav-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.5);
+      }
+
+      .nav-btn.prev {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #555;
+      }
+
+      .counter {
+        font-size: 20px;
+        color: #764ba2;
+        margin-top: 20px;
+        font-weight: bold;
+        background: rgba(255, 255, 240, 0.7);
+        padding: 8px 20px;
+        border-radius: 30px;
+        display: inline-block;
+      }
+
+      /* first surprise override initial */
+      .initial-hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .love-display {
+          font-size: 50px;
+        }
+        .question {
+          font-size: 24px;
+        }
+        .question-container {
+          padding: 30px 40px;
+        }
+        .btn {
+          padding: 15px 35px;
+          font-size: 20px;
+        }
+        .memory-header {
+          font-size: 32px;
+        }
+        .memory-caption {
+          font-size: 18px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Floating Hearts Container -->
+    <div id="hearts-container"></div>
+
+    <!-- MAIN PAGE (Question) - absolutely no scroll -->
+    <div id="main-page">
+      <div class="love-display">LOVE</div>
+      <div class="question-container">
+        <div class="question">Will you be my Valentine? 💕</div>
+        <div class="buttons-container">
+          <button class="btn btn-yes" id="yesBtn">Yes! 💖</button>
+          <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SURPRISE MEMORY CAROUSEL (hidden initially) -->
+    <div id="surpriseContainer" style="display: none">
+      <!-- page 1 -->
+      <div class="surprise-page" id="surprise1">
+        <div class="memory-header">💖 My Crush 💖</div>
+        <img
+          class="memory-photo"
+          src="./image/image copy.png"
+          alt="memory picnic"
+        />
+        <div class="memory-caption">
+          দুটি পাপড়ি গোলাপী রাঙা, কথা বলে চুপে। 🥰
+        </div>
+        <div class="nav-buttons">
+          <button class="nav-btn next" data-next="2">Next surprise ➡️</button>
+        </div>
+        <span class="counter">1/6</span>
+      </div>
+
+      <!-- page 2 -->
+      <div class="surprise-page" id="surprise2">
+        <div class="memory-header">14 Feb</div>
+        <img
+          class="memory-photo"
+          src="./image/image copy 5.png"
+          alt="beach memory"
+        />
+        <div class="memory-caption">Our date in 14Feb location thikana 💕</div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" data-prev="1">⬅️ Previous</button>
+          <button class="nav-btn next" data-next="3">Next ➡️</button>
+        </div>
+        <span class="counter">2/6</span>
+      </div>
+
+      <!-- page 3 -->
+      <div class="surprise-page" id="surprise3">
+        <div class="memory-header">Final match</div>
+        <img
+          class="memory-photo"
+          src="./image/image.png"
+          alt="birthday memory"
+        />
+        <div class="memory-caption">My Queen 👸</div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" data-prev="2">⬅️ Previous</button>
+          <button class="nav-btn next" data-next="4">Next ➡️</button>
+        </div>
+        <span class="counter">3/6</span>
+      </div>
+
+      <!-- page 4 -->
+
+      <div class="surprise-page" id="surprise4">
+        <div class="memory-header">HIJOL Caffe🍵</div>
+        <img
+          class="memory-photo"
+          src="./image/image copy 7.png"
+          alt="forest memory"
+        />
+        <div class="memory-caption">Flower with Flower 💐</div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" data-prev="3">⬅️ Previous</button>
+          <button class="nav-btn next" data-next="5">Next ➡️</button>
+        </div>
+        <span class="counter">4/6</span>
+      </div>
+
+      <!-- page 5 -->
+      <div class="surprise-page" id="surprise5">
+        <div class="memory-header">Viva</div>
+        <img
+          class="memory-photo"
+          src="./image/image copy 3.png"
+          alt="stargazing"
+        />
+        <div class="memory-caption">No one like you my sona pakhi 😍</div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" data-prev="4">⬅️ Previous</button>
+
+          <button class="nav-btn next" data-next="6">Next ➡️</button>
+        </div>
+        <span class="counter">5/6</span>
+      </div>
+
+      <!-- page 6 -->
+      <div class="surprise-page" id="surprise6">
+        <div class="memory-header">My Crush</div>
+        <img
+          class="memory-photo"
+          src="./image/image copy 2.png"
+          alt="stargazing"
+        />
+        <div class="memory-caption">My wild crush my love 💕😘</div>
+        <div class="nav-buttons">
+          <button class="nav-btn prev" data-prev="5">⬅️ Previous</button>
+          <!-- on last page, next could start over or just be hidden, but we'll keep it as 'start over' -->
+          <button class="nav-btn next" id="startOverBtn">💞 Start over</button>
+        </div>
+        <span class="counter">6/6</span>
+      </div>
+    </div>
+
+    <script>
+      // --- floating hearts (same as before, slightly enhanced) ---
+      function createHeart() {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        const symbols = ["💕", "💖", "💗", "💝", "💞", "❤️"];
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = Math.random() * 100 + "%";
+        heart.style.animationDuration = Math.random() * 10 + 8 + "s";
+        heart.style.fontSize = Math.random() * 20 + 15 + "px";
+        heart.style.opacity = 0.6 + Math.random() * 0.3;
+        document.getElementById("hearts-container").appendChild(heart);
+        setTimeout(() => heart.remove(), 18000);
+      }
+      setInterval(createHeart, 400);
+      for (let i = 0; i < 12; i++) setTimeout(createHeart, i * 150);
+
+      // --- No button run away ---
+      const noBtn = document.getElementById("noBtn");
+      const mainPage = document.getElementById("main-page");
+      const surpriseContainer = document.getElementById("surpriseContainer");
+      const successPages = document.querySelectorAll(".surprise-page");
+
+      noBtn.addEventListener("mouseenter", function (e) {
+        const maxX = window.innerWidth - noBtn.offsetWidth - 30;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 30;
+        const randomX = Math.max(10, Math.min(maxX, Math.random() * maxX));
+        const randomY = Math.max(10, Math.min(maxY, Math.random() * maxY));
+        noBtn.style.position = "fixed";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+        noBtn.style.transition = "all 0.2s ease";
+      });
+
+      // also move on click (extra safety)
+      noBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const maxX = window.innerWidth - noBtn.offsetWidth - 30;
+        const maxY = window.innerHeight - noBtn.offsetHeight - 30;
+        noBtn.style.position = "fixed";
+        noBtn.style.left = Math.random() * maxX + "px";
+        noBtn.style.top = Math.random() * maxY + "px";
+      });
+
+      // --- Yes button: show first surprise with memories ---
+      document.getElementById("yesBtn").addEventListener("click", function () {
+        // Hide main page, show surprise container
+        mainPage.style.display = "none";
+        surpriseContainer.style.display = "block";
+
+        // Hide all surprise pages first, then show page 1
+        successPages.forEach((p) => p.classList.remove("show"));
+        document.getElementById("surprise1").classList.add("show");
+
+        // Celebration hearts burst
+        for (let i = 0; i < 40; i++) {
+          setTimeout(() => {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.textContent = ["💖", "💕", "💗", "💝", "💞"][
+              Math.floor(Math.random() * 5)
+            ];
+            heart.style.left = Math.random() * 100 + "%";
+            heart.style.animationDuration = "3s";
+            heart.style.fontSize = Math.random() * 30 + 20 + "px";
+            document.getElementById("hearts-container").appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+          }, i * 30);
+        }
+
+        // Also change background gradient slightly for celebration mood
+        document.body.style.background =
+          "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fad0c4 100%)";
+      });
+
+      // --- Navigation between memory pages (next / prev) ---
+      function showPage(pageId) {
+        successPages.forEach((p) => p.classList.remove("show"));
+        const target = document.getElementById("surprise" + pageId);
+        if (target) target.classList.add("show");
+      }
+
+      // Event delegation for next/prev buttons inside surprise container
+      surpriseContainer.addEventListener("click", function (e) {
+        const target = e.target;
+        if (target.classList.contains("next")) {
+          const nextPage = target.getAttribute("data-next");
+          if (nextPage) {
+            showPage(nextPage);
+          }
+        } else if (target.classList.contains("prev")) {
+          const prevPage = target.getAttribute("data-prev");
+          if (prevPage) {
+            showPage(prevPage);
+          }
+        }
+        // "Start over" button id=startOverBtn - goes back to page 1 and also hearts
+        if (target.id === "startOverBtn") {
+          showPage("1");
+          // extra spark
+          for (let i = 0; i < 15; i++) {
+            setTimeout(createHeart, i * 30);
+          }
+        }
+      });
+
+      console.log("ready! lots of love <3");
+    </script>
+  </body>
+</html>
